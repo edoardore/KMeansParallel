@@ -35,6 +35,8 @@ Aggiornamento dei Clusters con 20 iterazioni in: 0.0569999s
 
 Process finished with exit code 0
 ```
+![gnuplot results](https://github.com/edoardore/KMeansParallel/blob/master/gnuplot.PNG)
+
 
 ## Librerie utilizzate
 ```c++
