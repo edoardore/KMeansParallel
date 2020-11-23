@@ -9,7 +9,7 @@
 
 
 double Range = 100000;
-int nPoint = 5000;
+const int nPoint = 5000;
 int nCluster = 5;
 int itr = 20;
 
@@ -43,9 +43,9 @@ struct point {
 };
 
 struct pointArray {
-    double x[5000];
-    double y[5000];
-    int clusterID[5000];
+    double x[nPoint];
+    double y[nPoint];
+    int clusterID[nPoint];
 };
 
 int main() {
@@ -54,9 +54,9 @@ int main() {
     if (AoS) {
         cout << "**********************Points in AoS************************\n";
         srand(time(NULL));
-        double timeStart = omp_get_wtime();
         cout << "Creazione di " << nPoint << " punti casuali\n";
         cout << "Creazione di " << nCluster << " Clusters\n";
+        double timeStart = omp_get_wtime();
         struct point points[nPoint];
         vector<Cluster> clusters;
 #pragma omp parallel
@@ -97,11 +97,24 @@ int main() {
         srand(time(NULL));
         double timeStart = omp_get_wtime();
         cout << "Creazione di " << nPoint << " punti casuali\n";
-        struct pointArray points;
-        initPointArray(&points, nPoint);
         cout << "Creazione di " << nCluster << " Clusters\n";
-        vector<Cluster> clusters = initCluster(nCluster);
         double end = omp_get_wtime();
+        struct pointArray points;
+        vector<Cluster> clusters = initCluster(nCluster);
+#pragma omp parallel
+        {
+#pragma omp sections
+            {
+#pragma omp section
+                {
+                    initPointArray(&points, nPoint);
+                }
+#pragma omp section
+                {
+                    clusters = initCluster(nCluster);
+                }
+            }
+        }
         auto duration = end - timeStart;
         cout << "Punti e Clusters generati in: " << duration << "s\n";
         bool updated = true;
