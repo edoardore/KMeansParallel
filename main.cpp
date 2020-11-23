@@ -98,7 +98,6 @@ int main() {
         double timeStart = omp_get_wtime();
         cout << "Creazione di " << nPoint << " punti casuali\n";
         cout << "Creazione di " << nCluster << " Clusters\n";
-        double end = omp_get_wtime();
         struct pointArray points;
         vector<Cluster> clusters = initCluster(nCluster);
 #pragma omp parallel
@@ -115,6 +114,7 @@ int main() {
                 }
             }
         }
+        double end = omp_get_wtime();
         auto duration = end - timeStart;
         cout << "Punti e Clusters generati in: " << duration << "s\n";
         bool updated = true;
